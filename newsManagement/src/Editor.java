@@ -146,7 +146,33 @@ public class Editor extends Worker {
     * @param title2
     */
    public double minDistance(String title1, String title2){
-	return 0;
+       int len1 = title1.length();
+       int len2 = title2.length();
 
+       int[][] array = new int[len2 + 1][len1 + 1];
+       for (int i = 0; i <= len1; i++) {
+           array[0][i] = i;
+       }
+       for (int j = 0; j <= len2; j++) {
+           array[j][0] = j;
+       }
+
+       for (int i = 1; i <= len1; i++) {
+           for (int j = 1; j <= len2; j++) {
+               int res = 0;
+               char si = title1.charAt(i - 1);
+               char sj = title2.charAt(j - 1);
+               if (i >= 1 && j >= 1) {
+                   int a = array[j - 1][i] + 1;
+                   int b = array[j][i - 1] + 1;
+                   int c = array[j - 1][i - 1] + ((si != sj) ? 1 : 0);
+                   int temp = (a < b) ? a : b;
+                   res = (temp < c) ? temp : c;
+               }
+               array[j][i] = res;
+           }
+       }
+       float similarity = 1 - (float) array[len2][len1] / Math.max(title1.length(), title2.length());
+       return similarity * 100;
    }
 }
