@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class Editor extends Worker {
@@ -9,7 +9,10 @@ public class Editor extends Worker {
 	
 	//初始化Editor
 	public Editor(String name, int age, int salary) {
-
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.department = "Editor";
 	}
 		
 	/**
@@ -34,7 +37,22 @@ public class Editor extends Worker {
      * 
      */
     public void  textExtraction(String data){
-
+        int length = 14;
+        while (data.length() > 16) {
+            for (int i = length; i >= 0; i--) {
+                if ("，。？！".contains(data.substring(i, i + 1))) {
+                    if (length == 14) {
+                        System.out.println("    " + data.substring(0, i + 1));
+                    } else {
+                        System.out.println(data.substring(0, i + 1));
+                    }
+                    data = data.substring(i + 1);
+                    break;
+                }
+            }
+            length = 16;
+        }
+        System.out.println(data);
     }
     
 
@@ -74,8 +92,34 @@ public class Editor extends Worker {
      * @param newsContent
      */
     public String findHotWords(String newsContent){
-		return newsContent;
+        String[] content = newsContent.split("，。！？");
+        LinkedHashMap<String, Integer> map = new LinkedHashMap<>();
+        for (int i = 2; i < 10; i++) {
+            for (String s : content) {
+                int len = s.length();
 
+                if (i > len) break;
+
+                for (int j = 0; j <= len - i; j++) {
+                    String word = newsContent.substring(j, j + i);
+                    if (!map.containsKey(word)) {
+                        map.put(word, 1);
+                    } else {
+                        int val = map.get(word);
+                        map.put(word, val + 1);
+                    }
+                }
+            }
+        }
+        List<Map.Entry<String, Integer>> li = new ArrayList<>(map.entrySet());
+        li.sort(new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        return String.valueOf(li.get(0)).split("=")[0];
     }
     
     /**
@@ -102,7 +146,33 @@ public class Editor extends Worker {
     * @param title2
     */
    public double minDistance(String title1, String title2){
-	return 0;
+       int len1 = title1.length();
+       int len2 = title2.length();
 
+       int[][] array = new int[len2 + 1][len1 + 1];
+       for (int i = 0; i <= len1; i++) {
+           array[0][i] = i;
+       }
+       for (int j = 0; j <= len2; j++) {
+           array[j][0] = j;
+       }
+
+       for (int i = 1; i <= len1; i++) {
+           for (int j = 1; j <= len2; j++) {
+               int res = 0;
+               char si = title1.charAt(i - 1);
+               char sj = title2.charAt(j - 1);
+               if (i >= 1 && j >= 1) {
+                   int a = array[j - 1][i] + 1;
+                   int b = array[j][i - 1] + 1;
+                   int c = array[j - 1][i - 1] + ((si != sj) ? 1 : 0);
+                   int temp = (a < b) ? a : b;
+                   res = (temp < c) ? temp : c;
+               }
+               array[j][i] = res;
+           }
+       }
+       float similarity = 1 - (float) array[len2][len1] / Math.max(title1.length(), title2.length());
+       return similarity * 100;
    }
 }
