@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Accountant extends Worker {
 	public String password;
@@ -8,7 +9,14 @@ public class Accountant extends Worker {
 	
 	//初始化Accountant
 	public Accountant(String name, int age, int salary, String password) {
-
+        if (age < 18 || salary < 2000) {
+            String message = "age must be greater than 18 and salary must be greater than 2000.";
+            throw new IllegalArgumentException(message);
+        }
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.password=password;
 	}
 	
     /**
@@ -30,9 +38,303 @@ public class Accountant extends Worker {
      * return："illegal"
      * @param number
      */
-    public  String numberToWords (String number){
-		return password;
+    public  String numberToWords (String number) {
+        String result = "";
+        char[] chararray = number.toCharArray();
+        for (char chr : chararray) {
+            if (!Character.isDigit(chr)) {
+                return "illegal";
+            }
+        }
+        Long longNumber = Long.valueOf(number);
+        if (longNumber > 2147483647 || longNumber < 0) {
+            return "illegal";
+        }
+        //这一步判断是否数字为负数和范围溢出
+        int whichThousand = 0;
+        //这个变量用来表示是第几个千；第0个千什么都不加，第1个加上thousand，第2个million，第三个billion
+        while (chararray.length > 0) {
+            switch (whichThousand) {
+                case 0:
+                    break;
+                case 1:
+                    result = " Thousand" + result;
+                    break;
+                case 2:
+                    result = " Million" + result;
+                    break;
+                case 3:
+                    result = " Billion" + result;
+                    break;
+                default:
+                    break;
+            }
+            whichThousand += 1;
+            if (chararray.length == 1) {
+                switch (chararray[0]) {
+                    case '1':
+                        result = "One" + result;
+                        break;
+                    case '2':
+                        result = "Two" + result;
+                        break;
+                    case '3':
+                        result = "Three" + result;
+                        break;
+                    case '4':
+                        result = "Four" + result;
+                        break;
+                    case '5':
+                        result = "Five" + result;
+                        break;
+                    case '6':
+                        result = "Six" + result;
+                        break;
+                    case '7':
+                        result = "Seven" + result;
+                        break;
+                    case '8':
+                        result = "Eight" + result;
+                        break;
+                    case '9':
+                        result = "Nine" + result;
+                        break;
+                    default:
+                        break;
 
+                }
+                chararray = Arrays.copyOfRange(chararray, 0, chararray.length - 1);
+            } else if (chararray.length == 2) {
+                if (chararray[chararray.length - 2] == '1') {
+                    //当这个两位为十几时单独讨论
+                    switch (chararray[chararray.length - 1]) {
+                        case '1':
+                            result = "Eleven" + result;
+                            break;
+                        case '2':
+                            result = "Twelve" + result;
+                            break;
+                        case '3':
+                            result = "Thirteen" + result;
+                            break;
+                        case '4':
+                            result = "Fourteen" + result;
+                            break;
+                        case '5':
+                            result = "Fifteen" + result;
+                            break;
+                        case '6':
+                            result = "Sixteen" + result;
+                            break;
+                        case '7':
+                            result = "Seventeen" + result;
+                            break;
+                        case '8':
+                            result = "Eighteen" + result;
+                            break;
+                        case '9':
+                            result = "Nineteen" + result;
+                            break;
+                        case '0':
+                            result = "Ten" + result;
+                            break;
+                        default:
+                            break;
+                    }
+                } else  {
+                    switch (chararray[chararray.length - 1]) {
+                        case '1':
+                            result = " One" + result;
+                            break;
+                        case '2':
+                            result = " Two" + result;
+                            break;
+                        case '3':
+                            result = " Three" + result;
+                            break;
+                        case '4':
+                            result = " Four" + result;
+                            break;
+                        case '5':
+                            result = " Five" + result;
+                            break;
+                        case '6':
+                            result = " Six" + result;
+                            break;
+                        case '7':
+                            result = " Seven" + result;
+                            break;
+                        case '8':
+                            result = " Eight" + result;
+                            break;
+                        case '9':
+                            result = " Nine" + result;
+                            break;
+                        default:
+                            break;
+                    }
+                    switch (chararray[chararray.length - 2]) {
+                        case '2':
+                            result = "Twenty" + result;
+                            break;
+                        case '3':
+                            result = "Thirty" + result;
+                            break;
+                        case '4':
+                            result = "Forty" + result;
+                            break;
+                        case '5':
+                            result = "Fifty" + result;
+                            break;
+                        case '6':
+                            result = "Sixty" + result;
+                            break;
+                        case '7':
+                            result = "Seventy" + result;
+                            break;
+                        case '8':
+                            result = "Eighty" + result;
+                            break;
+                        case '9':
+                            result = "Ninety" + result;
+                            break;
+                    }
+                }
+                chararray=Arrays.copyOfRange(chararray,0,chararray.length-2);
+            }else {
+                if (chararray[chararray.length - 2] == '1') {
+                    //十几单独讨论
+                    switch (chararray[chararray.length - 1]) {
+                        case '1':
+                            result = " Eleven" + result;
+                            break;
+                        case '2':
+                            result = " Twelve" + result;
+                            break;
+                        case '3':
+                            result = " Thirteen" + result;
+                            break;
+                        case '4':
+                            result = " Fourteen" + result;
+                            break;
+                        case '5':
+                            result = " Fifteen" + result;
+                            break;
+                        case '6':
+                            result = " Sixteen" + result;
+                            break;
+                        case '7':
+                            result = " Seventeen" + result;
+                            break;
+                        case '8':
+                            result = " Eighteen" + result;
+                            break;
+                        case '9':
+                            result = " Nineteen" + result;
+                            break;
+                        case '0':
+                            result = " Ten" + result;
+                            break;
+                        default:
+                            break;
+                    }
+                } else  {
+                    switch (chararray[chararray.length - 1]) {
+
+                        case '1':
+                            result = " One" + result;
+                            break;
+                        case '2':
+                            result = " Two" + result;
+                            break;
+                        case '3':
+                            result = " Three" + result;
+                            break;
+                        case '4':
+                            result = " Four" + result;
+                            break;
+                        case '5':
+                            result = " Five" + result;
+                            break;
+                        case '6':
+                            result = " Six" + result;
+                            break;
+                        case '7':
+                            result = " Seven" + result;
+                            break;
+                        case '8':
+                            result = " Eight" + result;
+                            break;
+                        case '9':
+                            result = " Nine" + result;
+                            break;
+                        default:
+                            break;
+                    }
+                    switch (chararray[chararray.length - 2]) {
+                        case '2':
+                            result = "Twenty" + result;
+                            break;
+                        case '3':
+                            result = "Thirty" + result;
+                            break;
+                        case '4':
+                            result = "Forty" + result;
+                            break;
+                        case '5':
+                            result = "Fifty" + result;
+                            break;
+                        case '6':
+                            result = "Sixty" + result;
+                            break;
+                        case '7':
+                            result = "Seventy" + result;
+                            break;
+                        case '8':
+                            result = "Eighty" + result;
+                            break;
+                        case '9':
+                            result = "Ninety" + result;
+                            break;
+                    }
+                }
+                switch (chararray[chararray.length - 3]){
+                    case '1':
+                        result = "One Hundred" + result;
+                        break;
+                    case '2':
+                        result = "Two Hundred" + result;
+                        break;
+                    case '3':
+                        result = "Three Hundred" + result;
+                        break;
+                    case '4':
+                        result = "Four Hundred" + result;
+                        break;
+                    case '5':
+                        result = "Five Hundred" + result;
+                        break;
+                    case '6':
+                        result = "Six Hundred" + result;
+                        break;
+                    case '7':
+                        result = "Seven Hundred" + result;
+                        break;
+                    case '8':
+                        result = "Eight Hundred" + result;
+                        break;
+                    case '9':
+                        result = "Nine Hundred" + result;
+                        break;
+                    default:
+                        break;
+                }
+                chararray=Arrays.copyOfRange(chararray,0,chararray.length-3);
+            }
+
+
+        }
+        return result;
     }
     
     /**
