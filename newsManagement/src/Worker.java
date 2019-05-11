@@ -54,6 +54,6 @@ public class Worker {
 	//展示员工的基本信息
 	public String show() {
         return "My name is " + getName() + " ; age : " + getAge() +
-                " ; salary : " + getSalary() + " ; department : " + getDepartment();
+				" ; salary : " + getSalary() + " ; department : " + getDepartment() + ".";
 	}
 }
