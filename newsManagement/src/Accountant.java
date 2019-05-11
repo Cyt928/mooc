@@ -39,6 +39,9 @@ public class Accountant extends Worker {
      * @param number
      */
     public  String numberToWords (String number) {
+        while (number.startsWith("0")){
+            number=number.substring(1);
+        }
         String result = "";
         char[] chararray = number.toCharArray();
         for (char chr : chararray) {
@@ -358,7 +361,103 @@ public class Accountant extends Worker {
      * @param password
      */
     public  int checkPassword(){
-		return 0;
+        boolean containsUpperCase=false;
+        //是否有大写字母
+        boolean containsLowerCase=false;
+        //是否有小写字母
+        boolean containsDigit=false;
+        //是否有数字
+        int specialLetter=0;
+        //特殊字符数
+
+        int n=0;
+        //总操作次数
+
+        int length=password.length();
+
+        char[] chars=password.toCharArray();
+        for(char chr:chars){
+            //判断了有无大小写，数字
+            if(Character.isDigit(chr)){
+                containsDigit=true;
+                continue;
+            }else if ((Character.isLetter(chr))){
+                if (Character.isUpperCase(chr)){
+                    containsUpperCase=true;
+                    continue;
+                }else {
+                    containsLowerCase=true;
+                    continue;
+                }
+            }else {
+                specialLetter++;
+            }
+        }
+
+        int[] repeatTimes=new int[password.length()];
+        //这个数组用来记录到这个字母时，重复了几次，
+        //比如avsssdwex，第三个s为3，第二个s为2
+
+        repeatTimes[0]=0;
+        for(int i=1;i<password.length();i++){
+            if (chars[i]==chars[i-1]){
+                repeatTimes[i]=repeatTimes[i-1]+1;
+            }else {
+                repeatTimes[i]=0;
+            }
+        }
+        boolean repeatLessThanThree=true;
+        for(int times:repeatTimes){
+            if (times>=3){
+                repeatLessThanThree=false;
+                break;
+            }
+        }
+
+        if (length>=8&& length<=20 && containsDigit&& containsLowerCase&&containsUpperCase&&repeatLessThanThree&&specialLetter==0){
+            return 0;
+        }
+
+        int specialAdd=0;
+        //特殊三大字符需要添加的总数（必须添加）
+        if(!containsDigit){
+            specialAdd++;
+        }
+        if (!containsLowerCase){
+            specialAdd++;
+        }
+        if (!containsUpperCase){
+            specialAdd++;
+        }
+
+        for(int i=0;i<password.length()-1;i++){
+            if (repeatTimes[i]>=3&& repeatTimes[i+1]==0){
+                n++;
+                if (specialAdd!=0){
+                    //插入字符可以用三大字符代替
+                    specialAdd--;
+                }
+                length++;
+            }
+        }if (repeatTimes[password.length()-1]>=3){
+            n++;
+        }
+        if (specialAdd!=0){
+            n+=specialAdd;
+            length+=specialAdd;
+        }
+
+        n-=specialLetter;
+        //删除特殊字符
+        length-=specialLetter;
+
+        if (length<8){
+            n+=(8-length);
+        }else if (length>20){
+            n+=(length-20);
+        }
+
+		return n;
 
     }
 }
